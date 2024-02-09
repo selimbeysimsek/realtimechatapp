@@ -1,0 +1,97 @@
+/* Grundlegende Reset-Stile für den Chat */
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f7f6;
+}
+
+#chat {
+  border: 1px solid #e4e4e4;
+  height: 400px;
+  overflow-y: scroll;
+  padding: 20px;
+  margin: 20px auto;
+  width: 90%;
+  max-width: 600px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+/* Stil für die Nachrichteneingabe */
+#message-input {
+  width: calc(100% - 48px); /* Abzug der Buttonbreite und etwas Padding */
+  padding: 10px;
+  margin: 20px auto;
+  display: block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+/* Stil für den Senden-Button */
+#send-button {
+  background-color: #4CAF50; /* Grüner Hintergrund */
+  color: white;
+  padding: 10px 20px;
+  margin: 20px auto;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  display: block;
+  width: auto;
+}
+
+#send-button:hover {
+  background-color: #45a049; /* Dunkleres Grün beim Hover */
+}
+
+/* Anpassungen für eine bessere Benutzererfahrung */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Stil für Nachrichten von 'dir' */
+p.you {
+  background-color: #dcf8c6; /* Hellgrün, ähnlich WhatsApp für gesendete Nachrichten */
+  padding: 10px;
+  border-radius: 18px;
+  max-width: 80%;
+  margin: 5px 0;
+  word-wrap: break-word;
+  float: right; /* Rechtsbündig für eigene Nachrichten */
+  clear: both;
+  color: black; /* Textfarbe */
+  border: 1px solid #c4e1a4; /* Leicht dunklerer Rand als der Hintergrund */
+}
+
+/* Stil für Nachrichten von 'anderen' */
+p.them {
+  background-color: #ebebeb; /* Grau für empfangene Nachrichten */
+  padding: 10px;
+  border-radius: 18px;
+  max-width: 80%;
+  margin: 5px 0;
+  word-wrap: break-word;
+  float: left; /* Linksbündig für empfangene Nachrichten */
+  clear: both;
+  color: black; /* Textfarbe */
+  border: 1px solid #d4d4d4; /* Leicht dunklerer Rand als der Hintergrund */
+}
+
+/* Clearfix für die Nachrichten */
+p:after {
+  content: "";
+  display: table;
+  clear: both;
+}
