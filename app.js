@@ -2,14 +2,15 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const socketio = require('socket.io');
+const bcrypt = require('bcryptjs');
+
+// OWN-Variables
+var username = '';
 
 // Express-Server erstellen
 const app = express();
 const server = require('http').createServer(app);
 const io = socketio(server);
-
-// Middleware definieren
-app.use(express.static('public'));
 
 //MongoDB konfigurieren
 mongoose.connect('mongodb://localhost:27017/chatapp', {
@@ -22,7 +23,10 @@ const MessageSchema = new mongoose.Schema({message: String, sender: String, rece
 const Message = mongoose.model('Message', MessageSchema);
 
 // Chat-User-Modell erstellen
-const UserSchema = new mongoose.Schema({username: String, password: String});
+const UserSchema = new mongoose.Schema({
+    username: {type: String, required: true, unique: true}, 
+    password: {type: String, required: true}
+});
 const User = mongoose.model('User', UserSchema);
 
 // Test Message für die Datenbank
@@ -54,7 +58,7 @@ io.on('connection', (socket) => {
     // Nachrichten empfangen 
     socket.on('message', (data) => {
         console.log(data);
-        const newMessage = new Message({message: data.text, sender: data.sender, receiver: data.receiver, timestamp: data.time});
+        const newMessage = new Message({message: data.text, sender: username, receiver: data.receiver, timestamp: data.time});
         newMessage.save()
             .then((result) => {
                 console.log(result);
@@ -71,6 +75,9 @@ io.on('connection', (socket) => {
     });
 });
 
+// Middleware definieren
+app.use(express.urlencoded({extended: true}));
+app.use(express.static('public'));
 
 // Routings definieren
 app.get('/', (req, res) => {
@@ -78,9 +85,33 @@ app.get('/', (req, res) => {
 });
 
 app.get('/chatarea', (req, res) => {
+    console.log(username)
     res.sendFile(__dirname + '/chatArea.html');
 });
 
 server.listen(3000, () => {
     console.log('Server running on port 3000');
+});
+
+app.post('/register', async (req, res) => {
+    try {
+        const {new_username, new_password, confirm_password} = req.body;
+        if (new_password !== confirm_password) {
+            return res.status(400).send('Passwords do not match');
+        }
+
+        const existingUser = await User.findOne({username: new_username});
+        if (existingUser) {
+            return res.status(400).send('Username already exists');
+        }
+
+        const hashedPassword = await bcrypt.hash(new_password, 10);
+        const newUser = new User({username: new_username, password: hashedPassword});
+        username = new_username;
+        await newUser.save();
+        res.redirect('/chatarea');
+    } catch (error) {
+        console.log(error);
+        res.status(500).send();
+    }
 });

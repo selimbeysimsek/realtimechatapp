@@ -7,13 +7,23 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div id="chat">
-    <p class="them">Das ist eine Nachricht von jemand anderem.</p>
-    <p class="you">Das ist eine Nachricht von mir.</p>
+  <div id="app-container">
+    <div id="chat-selection">
+      <!-- Chat-Auswahl hier -->
+      <div class="chat-option">Chat 1</div>
+      <div class="chat-option">Chat 2</div>
+      <!-- Weitere Chats hinzufügen -->
+    </div>
+    <div id="chat-container">
+      <div id="chat">
+        <p class="them">Das ist eine Nachricht von jemand anderem.</p>
+        <p class="you">Das ist eine Nachricht von mir.</p>
+      </div>
+      <input id="message-input" type="text">
+      <button id="send-button">Senden</button>
+    </div>
   </div>
-  <input id="message-input" type="text">
-  <button id="send-button">Senden</button>
   <script src="/socket.io/socket.io.js"></script>
-  <script src="script.js"></script>
+  <script src="scriptChatArea.js"></script>
 </body>
 </html>

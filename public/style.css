@@ -1,4 +1,32 @@
 /* Grundlegende Reset-Stile für den Chat */
+#app-container {
+  display: flex;
+}
+
+#chat-selection {
+  width: 20%; /* Breite der Chat-Auswahl */
+  background-color: #f2f2f2; /* Hintergrundfarbe */
+  padding: 10px; /* Innenabstand */
+  height: 100vh; /* Volle Höhe */
+  overflow-y: auto; /* Bei Bedarf vertikales Scrollen */
+}
+
+#chat-container {
+  flex-grow: 1; /* Rest des verfügbaren Raums einnehmen */
+  padding: 10px; /* Innenabstand */
+}
+
+.chat-option {
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: #ddd;
+  cursor: pointer;
+}
+
+.chat-option:hover {
+  background-color: #ccc;
+}
+
 body, html {
   margin: 0;
   padding: 0;

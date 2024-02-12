@@ -1,3 +1,4 @@
+// ----------------- Chat-Code -----------------
 // Verbindung zum Socket.io-Server herstellen
 const socket = io('http://localhost:3000');
 
