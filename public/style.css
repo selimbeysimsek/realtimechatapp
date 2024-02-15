@@ -1,3 +1,51 @@
+/* Nav-Area */
+#top-nav {
+  background-color: #333;
+  color: #fff;
+  padding: 10px 20px;
+}
+
+.nav-container {
+  display: flex;
+  justify-content: start;
+  gap: 20px;
+}
+
+.nav-link {
+  color: #fff;
+  text-decoration: none;
+  padding: 5px 10px;
+}
+
+.nav-link:hover {
+  background-color: #555;
+}
+
+.search-container {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+
+#search-input {
+  padding: 5px;
+  margin-right: 10px;
+  font-size: 16px;
+}
+
+#search-button {
+  padding: 5px 10px;
+  background-color: #555;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+#search-button:hover {
+  background-color: #666;
+}
+
 /* Grundlegende Reset-Stile für den Chat */
 #app-container {
   display: flex;

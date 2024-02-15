@@ -2,7 +2,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const socketio = require('socket.io');
-const bcrypt = require('bcryptjs');
+// const bcrypt = require('bcryptjs');
 
 // OWN-Variables
 var username = '';
@@ -28,6 +28,23 @@ const UserSchema = new mongoose.Schema({
     password: {type: String, required: true}
 });
 const User = mongoose.model('User', UserSchema);
+
+// Chat-Modell erstellen
+const ChatSchema = new mongoose.Schema({
+    user1: {type: String, required: true},
+    user2: {type: String, required: true},
+    messages: [MessageSchema]
+});
+const Chat = mongoose.model('Chat', ChatSchema);
+
+// Group-Chat-Modell erstellen
+const GroupChatSchema = new mongoose.Schema({
+    name: {type: String, required: true},
+    users: [String],
+    messages: [MessageSchema]
+});
+const GroupChat = mongoose.model('GroupChat', GroupChatSchema);
+
 
 // Test Message für die Datenbank
 const newMessage = new Message({message: 'Test', sender: 'TestSender', receiver: 'TestReceiver', timestamp: Date.now()});
@@ -105,8 +122,8 @@ app.post('/register', async (req, res) => {
             return res.status(400).send('Username already exists');
         }
 
-        const hashedPassword = await bcrypt.hash(new_password, 10);
-        const newUser = new User({username: new_username, password: hashedPassword});
+        // const hashedPassword = await bcrypt.hash(new_password, 10);
+        const newUser = new User({username: new_username, password: new_password});
         username = new_username;
         await newUser.save();
         res.redirect('/chatarea');
