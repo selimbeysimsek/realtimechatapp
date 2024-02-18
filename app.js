@@ -2,10 +2,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const socketio = require('socket.io');
+const cookieParser = require('cookie-parser');
 // const bcrypt = require('bcryptjs');
-
-// OWN-Variables
-var username = '';
 
 // Express-Server erstellen
 const app = express();
@@ -45,37 +43,20 @@ const GroupChatSchema = new mongoose.Schema({
 });
 const GroupChat = mongoose.model('GroupChat', GroupChatSchema);
 
-
-// Test Message für die Datenbank
-const newMessage = new Message({message: 'Test', sender: 'TestSender', receiver: 'TestReceiver', timestamp: Date.now()});
-
-// Test User für die Datenbank
-const newUser = new User({username:'selim', password:'1234'});
-
-// newMessage.save()
-//     .then((result) => {
-//         console.log(result);
-//     })
-//     .catch((err) => {
-//         console.log(err);
-//     });
-
-// newUser.save()
-//     .then((result) => {
-//         console.log(result);
-//     })
-//     .catch((err) => {
-//         console.log(err);
-//     });
-
 // Socket.io-Verbindung herstellen
 io.on('connection', (socket) => {
     console.log('User connected');
 
+
     // Nachrichten empfangen 
     socket.on('message', (data) => {
-        console.log(data);
-        const newMessage = new Message({message: data.text, sender: username, receiver: data.receiver, timestamp: data.time});
+        // Zugriff auf die Cookies über den Handshake-Mechanismus
+        let cookies = socket.handshake.headers.cookie;
+        // Username aus den Cookies extrahieren
+        const cookie = require('cookie');
+        const parsedCookies = cookie.parse(cookies);
+        const usernameGlobalC = parsedCookies.username;
+        const newMessage = new Message({message: data.text, sender: usernameGlobalC, receiver: data.receiver, timestamp: data.time});
         newMessage.save()
             .then((result) => {
                 console.log(result);
@@ -95,6 +76,8 @@ io.on('connection', (socket) => {
 // Middleware definieren
 app.use(express.urlencoded({extended: true}));
 app.use(express.static('public'));
+app.use(express.json());
+app.use(cookieParser());
 
 // Routings definieren
 app.get('/', (req, res) => {
@@ -102,13 +85,58 @@ app.get('/', (req, res) => {
 });
 
 app.get('/chatarea', (req, res) => {
-    console.log(username)
+    console.log(req.cookies.username)
     res.sendFile(__dirname + '/chatArea.html');
 });
 
-server.listen(3000, () => {
-    console.log('Server running on port 3000');
+app.get('/search', async (req, res) => {
+    const searchTerm = req.query.q;
+    if (!searchTerm) {
+        return res.status(400).send('Suchbegriff ist erforderlich');
+    }
+
+    try {
+        let users = '';
+        let usersarray = [];
+        users = await User.find({
+        username: { $regex: searchTerm, $options: 'i' },
+        });
+        console.log(users);
+        console.log('=====================')
+        users.forEach(user => {
+            usersarray.push(`${user.username} <button class="addButton" data-username="${user.username}" href="#"><svg width="15" height="15" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <!-- Hintergrund -->
+            <rect width="100%" height="100%" fill="none" />
+          
+            <!-- Plus-Zeichen -->
+            <line x1="10" y1="50" x2="90" y2="50" stroke="white" stroke-width="20" />
+            <line x1="50" y1="10" x2="50" y2="90" stroke="white" stroke-width="20" />
+          </svg></button>`);
+        });
+        console.log(usersarray);
+        res.json(usersarray);
+    } catch (error) {
+        res.status(500).send('Fehler bei der Suche nach Benutzern');
+    }
 });
+
+// app.get('/add' async (req, res) => {
+// });
+
+app.post('/login', async (req, res) => {
+    const { username, password } = req.body;
+
+    // Suche den Benutzer in der DB
+    const existingUser = await User.findOne({username: username});
+    if (!existingUser) {
+        return res.status(400).send('User not found');
+    } else if (existingUser.password !== password) {
+        return res.status(400).send('Wrong password');
+    } else {
+        res.cookie('username', username, {maxAge: 900000, httpOnly: true})
+        res.redirect('/chatarea');
+    }
+});  
 
 app.post('/register', async (req, res) => {
     try {
@@ -124,11 +152,15 @@ app.post('/register', async (req, res) => {
 
         // const hashedPassword = await bcrypt.hash(new_password, 10);
         const newUser = new User({username: new_username, password: new_password});
-        username = new_username;
+        res.cookie('username', new_username, {maxAge: 900000, httpOnly: true})
         await newUser.save();
         res.redirect('/chatarea');
     } catch (error) {
         console.log(error);
         res.status(500).send();
     }
+});
+
+server.listen(3000, () => {
+    console.log('Server running on port 3000');
 });

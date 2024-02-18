@@ -1,3 +1,9 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
 /* Nav-Area */
 #top-nav {
   background-color: #333;
@@ -44,6 +50,77 @@
 
 #search-button:hover {
   background-color: #666;
+}
+
+/* Grundlegende Stilisierung des Navigationsbereichs */
+.nav-container {
+  background-color: #f0f0f0;
+  padding: 10px;
+}
+
+.nav-link {
+  margin-right: 15px;
+  text-decoration: none;
+  color: #333;
+}
+
+/* Stilisierung der Suchergebnisse */
+#search-results {
+  color: #333;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  display: none; /* Standardmäßig nicht angezeigt */
+  max-height: 200px;
+  overflow-y: auto; /* Ermöglicht das Scrollen, falls viele Ergebnisse vorhanden sind */
+  position: absolute; /* Damit das Ergebnisfeld über anderen Inhalten schwebt */
+  top: 3.2rem; /* Positionierung unterhalb des Suchfelds */
+  width: 26.7vw; /* Breite des Suchfelds */;
+  z-index: 1000; /* Stellt sicher, dass das Ergebnisfeld über anderen Elementen liegt */
+}
+
+#search-results ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#search-results ul li {
+  position: relative;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+#search-results ul li:last-child {
+  border-bottom: none;
+}
+
+#search-results ul li:hover {
+  background-color: #f9f9f9;
+}
+
+.addButton {
+  position: absolute;
+  right: 0;
+  top: 0;
+  background-color: #007BFF; /* Blaue Hintergrundfarbe */
+  border: none; /* Keine Kante */
+  color: white; /* Weiße Textfarbe */
+  padding: 5px 10px; /* Reduziertes Padding für einen kleineren Button */
+  text-align: center; /* Zentrierter Text */
+  text-decoration: none; /* Keine Textdekoration */
+  display: inline-block; /* Inline-Block-Display */
+  font-size: 14px; /* Kleinere Schriftgröße */
+  margin: 4px 2px; /* Außenabstand */
+  cursor: pointer; /* Cursor als Zeiger */
+  border-radius: 8px; /* Weniger abgerundete Ecken für einen kleineren Button */
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19); /* Schattierung hinzufügen */
+  transition: all 0.3s; /* Glatter Übergang für Hover-Effekte */
+}
+
+.addButton:hover {
+  background-color: #0056b3; /* Dunklere Hintergrundfarbe */
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 12px 40px 0 rgba(0,0,0,0.19); /* Stärkere Schattierung */
 }
 
 /* Grundlegende Reset-Stile für den Chat */
