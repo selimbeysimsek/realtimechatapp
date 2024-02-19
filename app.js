@@ -43,6 +43,20 @@ const GroupChatSchema = new mongoose.Schema({
 });
 const GroupChat = mongoose.model('GroupChat', GroupChatSchema);
 
+// Freundschafsanfrage-Modell erstellen
+const RequestSchema = new mongoose.Schema({
+    sender: {type: String, required: true},
+    receiver: {type: String, required: true}
+});
+const Request = mongoose.model('Request', RequestSchema);
+
+// Freundschafts-Modell erstellen
+const FriendshipSchema = new mongoose.Schema({
+    user1: {type: String, required: true},
+    user2: {type: String, required: true}
+});
+const Friendship = mongoose.model('Friendship', FriendshipSchema);
+
 // Socket.io-Verbindung herstellen
 io.on('connection', (socket) => {
     console.log('User connected');
@@ -89,6 +103,28 @@ app.get('/chatarea', (req, res) => {
     res.sendFile(__dirname + '/chatArea.html');
 });
 
+app.get('/anfragen', (req, res) => {
+    console.log(req.cookies.username)
+    res.sendFile(__dirname + '/anfragen.html');
+});
+
+app.get('/getrequests', async (req, res) => {
+    try {
+        let requests = '';
+        let requestsarray = [];
+        requests = await Request.find({receiver: req.cookies.username});
+        console.log(requests);
+        requests.forEach(request => {
+            requestsarray.push(`${request.sender} <button class="accept" data-sender="${request.sender}" href="#">Annehmen</button>
+            <button class="decline" data-sender="${request.sender}" href="#">Ablehnen</button>`);
+        });
+        console.log(requestsarray);
+        res.json(requestsarray);
+    } catch (error) {
+        res.status(500).send('Fehler bei der Suche nach Anfragen');
+    }
+});
+
 app.get('/search', async (req, res) => {
     const searchTerm = req.query.q;
     if (!searchTerm) {
@@ -120,8 +156,20 @@ app.get('/search', async (req, res) => {
     }
 });
 
-// app.get('/add' async (req, res) => {
-// });
+app.get('/add', async (req, res) => {
+    const username = req.query.username;
+    if (!username) {
+        return res.status(400).send('Username is required');
+    }
+
+    try {
+        const newRequest = new Request({sender: req.cookies.username, receiver: username});
+        await newRequest.save();
+        res.json('Anfrage gesendet');
+    } catch (error) {
+        res.status(500).send('Fehler beim Senden der Anfrage');
+    }
+});
 
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;

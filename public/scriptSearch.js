@@ -25,15 +25,14 @@ document.addEventListener('DOMContentLoaded', () => {
           addButton.forEach(button => {
             button.addEventListener('click', function() {
               const username = this.dataset.username;
-              alert(username);
-              // fetch(`/add?username=${username}`)
-              //   .then(response => response.json())
-              //   .then(data => {
-              //     console.log(data);
-              //   })
-              //   .catch(error => {
-              //     console.error('Fehler:', error);
-              //   });
+              fetch(`/add?username=${username}`)
+                .then(response => response.json())
+                .then(data => {
+                  console.log(data);
+                })
+                .catch(error => {
+                  console.error('Fehler:', error);
+                });
             });
           });
         } else {

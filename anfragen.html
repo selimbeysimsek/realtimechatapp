@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Freundschaftsanfragen</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 20px;
+        }
+        .request {
+            background-color: white;
+            margin-bottom: 10px;
+            padding: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .request h4 {
+            margin: 0;
+            color: #006400; /* Dunkelgrün */
+        }
+        .actions button {
+            margin-right: 10px;
+            padding: 5px 10px;
+            border: none;
+            cursor: pointer;
+        }
+        .accept {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .decline {
+            background-color: #f44336;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+  <nav id="top-nav">
+    <div class="nav-container">
+      <a href="/chatarea" class="nav-link">Chats</a>
+      <!-- Füge hier weitere Navigationslinks hinzu, z.B. für Profilseite oder Einstellungen -->
+      <a href="#" class="nav-link">Einstellungen</a>
+      <a href="/anfragen" class="nav-link">Anfragen</a>
+      <div class="search-container">
+        <input type="text" id="search-input" placeholder="Suche...">
+        <button id="search-button">Suchen</button>
+        <div id="search-results"></div>
+      </div>      
+    </div>
+  </nav>  
+
+  <div id="requestList">
+      <!-- Anfragen werden hier eingefügt -->
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="scriptRequests.js"></script>
+  <script src="scriptSearch.js"></script>
+
+</body>
+</html>
