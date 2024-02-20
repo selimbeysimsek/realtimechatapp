@@ -17,7 +17,7 @@ mongoose.connect('mongodb://localhost:27017/chatapp', {
 });
 
 // Chat-Nachrichten-Modell erstellen
-const MessageSchema = new mongoose.Schema({message: String, sender: String, receiver: String, timestamp: Date});
+const MessageSchema = new mongoose.Schema({message: String, sender: String, receiver: String, timestamp: Date, chatId: String});
 const Message = mongoose.model('Message', MessageSchema);
 
 // Chat-User-Modell erstellen
@@ -30,16 +30,14 @@ const User = mongoose.model('User', UserSchema);
 // Chat-Modell erstellen
 const ChatSchema = new mongoose.Schema({
     user1: {type: String, required: true},
-    user2: {type: String, required: true},
-    messages: [MessageSchema]
+    user2: {type: String, required: true}
 });
 const Chat = mongoose.model('Chat', ChatSchema);
 
 // Group-Chat-Modell erstellen
 const GroupChatSchema = new mongoose.Schema({
     name: {type: String, required: true},
-    users: [String],
-    messages: [MessageSchema]
+    users: [String]
 });
 const GroupChat = mongoose.model('GroupChat', GroupChatSchema);
 
@@ -70,7 +68,7 @@ io.on('connection', (socket) => {
         const cookie = require('cookie');
         const parsedCookies = cookie.parse(cookies);
         const usernameGlobalC = parsedCookies.username;
-        const newMessage = new Message({message: data.text, sender: usernameGlobalC, receiver: data.receiver, timestamp: data.time});
+        const newMessage = new Message({message: data.text, sender: usernameGlobalC, receiver: data.receiver, timestamp: data.time, chatId: data.chatId});
         newMessage.save()
             .then((result) => {
                 console.log(result);
@@ -78,6 +76,7 @@ io.on('connection', (socket) => {
             .catch((err) => {
                 console.log(err);
             });
+        data.sender = usernameGlobalC;
         io.emit('message', data);
     });
 
@@ -108,6 +107,32 @@ app.get('/anfragen', (req, res) => {
     res.sendFile(__dirname + '/anfragen.html');
 });
 
+app.get('/freunde', (req, res) => {
+    console.log(req.cookies.username)
+    res.sendFile(__dirname + '/friends.html');
+});
+
+app.get('/getfriends', async (req, res) => {
+    try {
+        let friends = '';
+        let friends2 = '';
+        let friendsarray = [];
+        friends = await Friendship.find({user1: req.cookies.username});
+        console.log(friends);
+        friends.forEach(friend => {
+            friendsarray.push(friend.user2);
+        });
+        friends2 = await Friendship.find({user2: req.cookies.username});
+        console.log(friends);
+        friends2.forEach(friend => {
+            friendsarray.push(friend.user1);
+        });
+        res.json(friendsarray);
+    } catch (error) {
+        res.status(500).send('Fehler bei der Suche nach Freunden');
+    }
+});
+
 app.get('/getrequests', async (req, res) => {
     try {
         let requests = '';
@@ -122,6 +147,98 @@ app.get('/getrequests', async (req, res) => {
         res.json(requestsarray);
     } catch (error) {
         res.status(500).send('Fehler bei der Suche nach Anfragen');
+    }
+});
+
+// Creating new chats
+app.get('/getchat', async (req, res) => {
+    const friend = req.query.friend;
+    const username = req.cookies.username;
+    if (!friend) {
+        return res.status(400).send('Friend is required');
+    }
+    const existingChat = await Chat.findOne({user1: username, user2: friend});
+    const existingChat2 = await Chat.findOne({user1: friend, user2: username});
+    if (existingChat) {
+        return res.status(200).send('Chat already exists');
+    } else if (existingChat2) {
+        return res.status(200).send('Chat already exists');
+    }
+     else {
+        const newChat = new Chat({user1: username, user2: friend});
+        await newChat.save();
+        res.status(200).send('Chat erstellt');
+    }
+});
+
+// Getting chats
+app.get('/getchats', async (req, res) => {
+    const username = req.cookies.username;
+    if (!username) {
+        return res.status(400).send('Username is required');
+    }
+    try {
+        let chats = '';
+        let chatObject = {};
+        let chatsarray = [];
+        chats = await Chat.find({user1: username});
+        console.log(chats);
+        chats.forEach(chat => {
+            chatObject = {receiver: chat.user2, chatId: chat._id}
+            chatsarray.push(chatObject);
+        });
+        chats = await Chat.find({user2: username});
+        console.log(chats);
+        chats.forEach(chat => {
+            chatObject = {receiver: chat.user1, chatId: chat._id}
+            chatsarray.push(chatObject);
+        });
+        res.json(chatsarray);
+    } catch (error) {
+        res.status(500).send('Fehler bei der Suche nach Chats');
+    }
+});
+
+app.get('/getmessages', async (req, res) => {
+    const chatId = req.query.chatId;
+    if (!chatId) {
+        return res.status(400).send('ChatId is required');
+    }
+    try {
+        let messages = '';
+        messages = await Message.find({chatId: chatId});
+        res.json(messages);
+    } catch (error) {
+        res.status(500).send('Fehler beim Abrufen der Nachrichten');
+    }
+});
+
+app.get('/accept', async (req, res) => {
+    const sender = req.query.sender;
+    if (!sender) {
+        return res.status(400).send('Sender is required');
+    }
+
+    try {
+        const newFriendship = new Friendship({user1: sender, user2: req.cookies.username});
+        await newFriendship.save();
+        await Request.deleteOne({sender: sender, receiver: req.cookies.username});
+        res.json('Freundschaftsanfrage angenommen');
+    } catch (error) {
+        res.status(500).send('Fehler beim Annehmen der Anfrage');
+    }
+});
+
+app.get('/decline', async (req, res) => {
+    const sender = req.query.sender;
+    if (!sender) {
+        return res.status(400).send('Sender is required');
+    }
+    try {
+        await Request.deleteOne({sender: sender, receiver: req.cookies.username});
+        res.json('Freundschaftsanfrage abgelehnt');
+    } catch (error) {
+        res.status(500).send('Fehler beim Ablehnen der Anfrage');
     }
 });
 
@@ -181,7 +298,7 @@ app.post('/login', async (req, res) => {
     } else if (existingUser.password !== password) {
         return res.status(400).send('Wrong password');
     } else {
-        res.cookie('username', username, {maxAge: 900000, httpOnly: true})
+        res.cookie('username', username, {maxAge: 9000000, httpOnly: true})
         res.redirect('/chatarea');
     }
 });  
@@ -200,7 +317,7 @@ app.post('/register', async (req, res) => {
 
         // const hashedPassword = await bcrypt.hash(new_password, 10);
         const newUser = new User({username: new_username, password: new_password});
-        res.cookie('username', new_username, {maxAge: 900000, httpOnly: true})
+        res.cookie('username', new_username, {maxAge: 9000000, httpOnly: true})
         await newUser.save();
         res.redirect('/chatarea');
     } catch (error) {

@@ -123,6 +123,27 @@
   box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 12px 40px 0 rgba(0,0,0,0.19); /* Stärkere Schattierung */
 }
 
+/* Stil für die Friends-Area */
+
+.chatButtonRequest {
+  display: inline-block;
+  background-color: #4CAF50; /* Grüner Hintergrund */
+  border: none;
+  color: white; /* Weiße Textfarbe */
+  padding: 5px 5px 2.5px; /* Padding innen */
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 8px; /* Abgerundete Ecken für den Button */
+}
+
+.chatButtonRequest svg {
+  fill: white; /* SVG-Füllfarbe auf Weiß setzen */
+  vertical-align: middle; /* Zentriert das SVG vertikal zum Text */
+}
+
 /* Grundlegende Reset-Stile für den Chat */
 #app-container {
   display: flex;

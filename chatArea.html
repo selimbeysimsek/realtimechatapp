@@ -13,6 +13,7 @@
       <!-- Füge hier weitere Navigationslinks hinzu, z.B. für Profilseite oder Einstellungen -->
       <a href="#" class="nav-link">Einstellungen</a>
       <a href="/anfragen" class="nav-link">Anfragen</a>
+      <a href="/freunde" class="nav-link">Freunde</a>
       <div class="search-container">
         <input type="text" id="search-input" placeholder="Suche...">
         <button id="search-button">Suchen</button>
@@ -23,21 +24,20 @@
   <div id="app-container">
     <div id="chat-selection">
       <!-- Chat-Auswahl hier -->
-      <div class="chat-option">Chat 1</div>
-      <div class="chat-option">Chat 2</div>
-      <!-- Weitere Chats hinzufügen -->
     </div>
     <div id="chat-container">
       <div id="chat">
-        <p class="them">Das ist eine Nachricht von jemand anderem.</p>
-        <p class="you">Das ist eine Nachricht von mir.</p>
+        <!-- <p class="them">Das ist eine Nachricht von jemand anderem.</p>
+        <p class="you">Das ist eine Nachricht von mir.</p> -->
       </div>
       <input id="message-input" type="text">
+      <input id="chatId" data-id="leer" data-username="leer" type="hidden">
       <button id="send-button">Senden</button>
     </div>
   </div>
   <script src="/socket.io/socket.io.js"></script>
   <script src="scriptChatArea.js"></script>
   <script src="scriptSearch.js"></script>
+  <script src="scriptChats.js"></script>
 </body>
 </html>
