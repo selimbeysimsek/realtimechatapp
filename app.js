@@ -58,6 +58,9 @@ const Friendship = mongoose.model('Friendship', FriendshipSchema);
 // Socket.io-Verbindung herstellen
 io.on('connection', (socket) => {
     console.log('User connected');
+    socket.on('joinRoom', (room) => {
+        socket.join(room);
+    });
 
 
     // Nachrichten empfangen 
@@ -77,7 +80,8 @@ io.on('connection', (socket) => {
                 console.log(err);
             });
         data.sender = usernameGlobalC;
-        io.emit('message', data);
+        // io.emit('message', data);
+        io.to(data.chatId).emit('message', data);
     });
 
     // Verbindung trennen
@@ -212,6 +216,21 @@ app.get('/getmessages', async (req, res) => {
         res.status(500).send('Fehler beim Abrufen der Nachrichten');
     }
 });
+
+// app.get('/joinchat', async (req, res) => {
+//     const chatId = req.query.chatId;
+//     if (!chatId) {
+//         return res.status(400).send('ChatId is required');
+//     }
+//     try {
+//         socket.on('joinRoom', (chatId) => {
+//             socket.join(chatId);
+//         });
+//         res.status(200).send('Chat beigetreten');
+//     } catch (error) {
+//         res.status(500).send('Fehler beim Beitreten des Chats');
+//     }
+// });
 
 app.get('/accept', async (req, res) => {
     const sender = req.query.sender;

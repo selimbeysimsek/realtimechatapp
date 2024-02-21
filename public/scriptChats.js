@@ -19,7 +19,9 @@ document.addEventListener('DOMContentLoaded', () => {
           fetch(`/getmessages?chatId=${chatId}`)
             .then(response => response.json())
             .then(data => {
+              socket.emit('joinRoom', chatId);
               const chat = document.getElementById('chat');
+              const input = document.getElementById('message-input');
               chat.innerHTML = '';
               data.forEach(message => {
                 const messageElement = document.createElement('p');
@@ -35,6 +37,8 @@ document.addEventListener('DOMContentLoaded', () => {
               const chatIdElement = document.getElementById('chatId');
               chatIdElement.dataset.id = chatId;
               chatIdElement.dataset.username = this.dataset.username;
+              chat.scrollTop = chat.scrollHeight;
+              input.value = '';
             })
             .catch(error => {
               console.error('Fehler:', error);
