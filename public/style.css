@@ -4,6 +4,56 @@
   margin: 0;
 }
 
+/* LogIn-Page */
+body {
+  font-family: Arial, sans-serif;
+}
+form.logInPageItem {
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  max-width: 300px;
+  display: none;
+}
+form.active {
+  display: block;
+}
+input.logInPageItem[type="text"], input.logInPageItem[type="password"], input.logInPageItem[type="submit"], button.logInPageItem {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  box-sizing: border-box;
+}
+input.logInPageItem[type="submit"], button.logInPageItem {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+input.logInPageItem[type="submit"]:hover, button.logInPageItem:hover {
+  background-color: #45a049;
+}
+.toggle-buttons {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+#login-btn, #register-btn {
+  display: inline-block;
+  margin-top: 30vh;
+  width: 30vw;
+  border-radius: 8px;
+  border: 1px solid #999999;
+  box-shadow: 0px 0px 8px #9c9c9c;
+}
+
+.logInButton {
+  margin-top: 30vh;
+  width: 30vw;
+  border-radius: 8px;
+  border: 1px solid #999999;
+}
+
 /* Nav-Area */
 #top-nav {
   background-color: #333;

@@ -4,65 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login & Register</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-        }
-        form {
-            margin: 20px auto;
-            padding: 20px;
-            border: 1px solid #ccc;
-            max-width: 300px;
-            display: none;
-        }
-        form.active {
-            display: block;
-        }
-        input[type="text"], input[type="password"], input[type="submit"], button {
-            width: 100%;
-            padding: 10px;
-            margin: 5px 0;
-            box-sizing: border-box;
-        }
-        input[type="submit"], button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        input[type="submit"]:hover, button:hover {
-            background-color: #45a049;
-        }
-        .toggle-buttons {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="toggle-buttons">
-        <button id="login-btn">Login</button>
-        <button id="register-btn">Register</button>
+        <button class="logInPageItem" id="login-btn">Login</button>
+        <button class="logInPageItem" id="register-btn">Register</button>
     </div>
 
-    <form id="login-form" action="/login" method="POST">
+    <form class="logInPageItem" id="login-form" action="/login" method="POST">
         <h2>Login</h2>
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" required>
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
-        <input type="submit" value="Login">
+        <label class="logInPageItem" for="username">Username:</label>
+        <input class="logInPageItem" type="text" id="username" name="username" required>
+        <label class="logInPageItem" for="password">Password:</label>
+        <input class="logInPageItem" type="password" id="password" name="password" required>
+        <input class="logInPageItem logInButton" type="submit" value="Login">
     </form>
 
-    <form id="register-form" action="/register" method="POST">
+    <form class="logInPageItem" id="register-form" action="/register" method="POST">
         <h2>Register</h2>
-        <label for="new_username">Username:</label>
-        <input type="text" id="new_username" name="new_username" required>
-        <label for="new_password">Password:</label>
-        <input type="password" id="new_password" name="new_password" required>
-        <label for="confirm_password">Confirm Password:</label>
-        <input type="password" id="confirm_password" name="confirm_password" required>
-        <input type="submit" value="Register">
+        <label class="logInPageItem" for="new_username">Username:</label>
+        <input class="logInPageItem" type="text" id="new_username" name="new_username" required>
+        <label class="logInPageItem" for="new_password">Password:</label>
+        <input class="logInPageItem" type="password" id="new_password" name="new_password" required>
+        <label class="logInPageItem" for="confirm_password">Confirm Password:</label>
+        <input class="logInPageItem" type="password" id="confirm_password" name="confirm_password" required>
+        <input class="logInPageItem logInButton" type="submit" value="Register">
     </form>
 
     <script src="scriptLogIn.js"></script>
