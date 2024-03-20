@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat-Anwendung</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
+
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+    background-color: #f7f7f7;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+.left-column, .right-column {
+    overflow-y: auto;
+}
+
+.left-column {
+    flex: 1;
+    background-color: #fafafa;
+    display: flex;
+    flex-direction: column;
+}
+
+.right-column {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+}
+
+.top-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    background: #ffffff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.top-nav img {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+}
+
+.icons {
+    display: flex;
+}
+
+.icons button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.chat-list, .chat-area {
+    flex: 1;
+}
+
+.chat-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    overflow-y: auto;
+}
+
+.chat-option {
+    padding: 15px;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.chat-option:hover {
+    background-color: #e9e9e9;
+}
+
+.chat-option img {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    margin-right: 15px;
+}
+
+.active, .chat-option.active:hover {
+    background-color: #d0d0d0;
+}
+
+.chat-area {
+    padding: 20px;
+    background: #ffffff;
+    overflow-y: auto;
+}
+
+.message {
+    padding: 10px 20px;
+    margin-bottom: 15px;
+    border-radius: 20px;
+    position: relative;
+    color: #ffffff;
+}
+
+.sent {
+    background-color: #4a76a8;
+    margin-left: auto;
+    margin-right: 0;
+}
+
+.received {
+    background-color: #6c757d;
+}
+
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+
+    .left-column, .right-column {
+        height: 50%;
+    }
+
+    .top-nav {
+        padding: 10px;
+    }
+
+    .top-nav img {
+        height: 40px;
+        width: 40px;
+    }
+}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left-column">
+            <nav class="top-nav">
+                <img src="your-profile-picture-url.jpg" alt="Profilbild" class="profile-pic">
+                <div class="icons">
+                    <button>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="auto" viewBox="0 0 2048 2048">
+                        <path fill="#000" d="M1536 1536h-13q-23-112-81-206t-141-162t-187-106t-218-38q-88 0-170 23t-153 64t-129 100t-100 130t-65 153t-23 170H128q0-120 35-231t101-205t156-167t204-115q-113-74-176-186t-64-248q0-106 40-199t109-163T696 40T896 0q106 0 199 40t163 109t110 163t40 200q0 66-16 129t-48 119t-75 103t-101 83q112 43 206 118t162 176v296zM512 512q0 80 30 149t82 122t122 83t150 30q79 0 149-30t122-82t83-122t30-150q0-79-30-149t-82-122t-123-83t-149-30q-80 0-149 30t-122 82t-83 123t-30 149zm1280 1152h256v128h-256v256h-128v-256h-256v-128h256v-256h128v256z"/>
+                      </svg>
+                    </button>
+                    <button>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="auto" viewBox="0 0 24 24">
+                        <path fill="none" stroke="currentColor" stroke-width="1.5" d="M12 13a4 4 0 1 0 0-8a4 4 0 0 0 0 8Zm-6 9v-3a6 6 0 1 1 12 0v3M13 5c.404-1.664 2.015-3 4-3c2.172 0 3.98 1.79 4 4c-.02 2.21-1.828 4-4 4h-1h1c3.288 0 6 2.686 6 6v2M11 5c-.404-1.664-2.015-3-4-3c-2.172 0-3.98 1.79-4 4c.02 2.21 1.828 4 4 4h1h-1c-3.288 0-6 2.686-6 6v2"/>
+                      </svg>
+                    </button>
+                    <button>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="auto" viewBox="0 0 24 24">
+                        <g fill="none" stroke="currentColor">
+                            <path stroke-width="1.35" d="M12.875 5C9.225 5 7.4 5 6.242 6.103a3.986 3.986 0 0 0-.139.139C5 7.4 5 9.225 5 12.875V17c0 .943 0 1.414.293 1.707C5.586 19 6.057 19 7 19h4.125c3.65 0 5.475 0 6.633-1.103a3.95 3.95 0 0 0 .139-.139C19 16.6 19 14.775 19 11.125"/>
+                            <path stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" d="M9 10h6m-6 4h3m7-6V2m-3 3h6"/>
+                        </g>
+                    </svg>
+                    </button>
+                    <button>
+                      <svg xmlns="http://www.w3.org/2000/svg" width="30" height="auto" viewBox="0 0 21 21">
+                        <g fill="currentColor" fill-rule="evenodd">
+                            <circle cx="10.5" cy="10.5" r="1"/>
+                            <circle cx="10.5" cy="5.5" r="1"/>
+                            <circle cx="10.5" cy="15.5" r="1"/>
+                        </g>
+                    </svg>
+                    </button>
+                </div>
+            </nav>
+            <ul class="chat-list">
+                <!-- Beispiel für Chat-Optionen -->
+                <li class="chat-option active"><img src="contact-picture-url.jpg" alt="Kontaktbild">Kontakt 1</li>
+                <li class="chat-option"><img src="contact-picture-url.jpg" alt="Kontaktbild">Kontakt 2</li>
+                <!-- Weitere Chat-Optionen hinzufügen -->
+            </ul>
+        </div>
+        <div class="right-column">
+            <nav class="top-nav">
+                <img src="contact-profile-picture-url.jpg" alt="Kontaktbild" class="contact-pic">
+                <button><img src="settings-icon.png" alt="Einstellungen"></button>
+            </nav>
+            <div class="chat-area">
+                <!-- Beispiel für Chat-Nachrichten -->
+                <div class="message received">Hallo!</div>
+                <div class="message sent">Hi, wie geht's?</div>
+                <!-- Weitere Nachrichten hinzufügen -->
+            </div>
+        </div>
+    </div>
+</body>
+</html>

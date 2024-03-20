@@ -208,6 +208,9 @@ input.logInPageItem[type="submit"]:hover, button.logInPageItem:hover {
 }
 
 #chat-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   flex-grow: 1; /* Rest des verfügbaren Raums einnehmen */
   padding: 10px; /* Innenabstand */
 }
@@ -244,27 +247,39 @@ body, html {
 }
 
 /* Stil für die Nachrichteneingabe */
+#inputArea {
+  width: 90%;
+  max-width: 600px;
+  display: flex;
+  justify-content: space-around;
+}
+
 #message-input {
-  width: calc(100% - 48px); /* Abzug der Buttonbreite und etwas Padding */
+  display: inline-block;
+  width: 90%; /* Abzug der Buttonbreite und etwas Padding */
+  max-width: 505px; /* Maximalbreite für größere Bildschirme */
   padding: 10px;
   margin: 20px auto;
   display: block;
   border: 1px solid #ccc;
   border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   box-sizing: border-box;
 }
 
 /* Stil für den Senden-Button */
 #send-button {
+  display: inline-block;
   background-color: #4CAF50; /* Grüner Hintergrund */
   color: white;
   padding: 10px 20px;
   margin: 20px auto;
   border: none;
   border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
   cursor: pointer;
   display: block;
-  width: auto;
+  width: 85px;
 }
 
 #send-button:hover {
