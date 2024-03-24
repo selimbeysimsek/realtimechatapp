@@ -30,7 +30,8 @@ const User = mongoose.model('User', UserSchema);
 // Chat-Modell erstellen
 const ChatSchema = new mongoose.Schema({
     user1: {type: String, required: true},
-    user2: {type: String, required: true}
+    user2: {type: String, required: true},
+    lastMessage: {type: Date, default: ''}
 });
 const Chat = mongoose.model('Chat', ChatSchema);
 
@@ -64,7 +65,7 @@ io.on('connection', (socket) => {
 
 
     // Nachrichten empfangen 
-    socket.on('message', (data) => {
+    socket.on('message', async (data) => {
         // Zugriff auf die Cookies über den Handshake-Mechanismus
         let cookies = socket.handshake.headers.cookie;
         // Username aus den Cookies extrahieren
@@ -79,6 +80,7 @@ io.on('connection', (socket) => {
             .catch((err) => {
                 console.log(err);
             });
+        await Chat.findOneAndUpdate({_id: data.chatId}, {lastMessage: data.time});
         data.sender = usernameGlobalC;
         // io.emit('message', data);
         io.to(data.chatId).emit('message', data);
@@ -114,6 +116,10 @@ app.get('/anfragen', (req, res) => {
 app.get('/freunde', (req, res) => {
     console.log(req.cookies.username)
     res.sendFile(__dirname + '/friends.html');
+});
+
+app.get('/getMyName', (req, res) => {
+    res.json(req.cookies.username);
 });
 
 app.get('/getfriends', async (req, res) => {
@@ -186,15 +192,15 @@ app.get('/getchats', async (req, res) => {
         let chatObject = {};
         let chatsarray = [];
         chats = await Chat.find({user1: username});
-        console.log(chats);
+        // console.log(chats);
         chats.forEach(chat => {
-            chatObject = {receiver: chat.user2, chatId: chat._id}
+            chatObject = {receiver: chat.user2, chatId: chat._id, lastMessage: chat.lastMessage}
             chatsarray.push(chatObject);
         });
         chats = await Chat.find({user2: username});
         console.log(chats);
         chats.forEach(chat => {
-            chatObject = {receiver: chat.user1, chatId: chat._id}
+            chatObject = {receiver: chat.user1, chatId: chat._id, lastMessage: chat.lastMessage}
             chatsarray.push(chatObject);
         });
         res.json(chatsarray);

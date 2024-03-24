@@ -1,0 +1,171 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+body, html {
+  height: 100%;
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+.container-chat {
+  display: flex;
+  height: 100%;
+  width: 100%;
+}
+
+.left-panel, .right-panel {
+  flex: 1;
+}
+
+.left-panel {
+  flex: 1; /* 1/3 der Breite */
+  background-color: #f0f0f0;
+}
+
+.right-panel {
+  flex: 3; /* 2/3 der Breite */
+  background-color: #fff;
+  display: flex;
+  flex-direction: column; /* Inhalte vertikal stapeln */
+  justify-content: space-between; /* Eingabebereich unten halten */
+  height: 100%; /* Volle Höhe des Elternelements nutzen */
+}
+
+.top-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 52px;
+  padding: 10px;
+  background-color: #e9e9e9;
+  border-bottom: 2px solid #d3d3d3;
+}
+
+.name {
+  font-weight: bold;
+}
+
+.icons, .icon {
+  display: flex;
+  gap: 10px;
+}
+
+.chat-options, .chat-area {
+  padding: 10px;
+}
+
+.chat-options {
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #e0e0e0; /* Leichter Trennstrich zwischen den Optionen */
+}
+
+.chat-name {
+  font-weight: bold;
+}
+
+.chat-time {
+  font-size: 0.8em;
+  color: #909090; /* Unauffällige Schriftfarbe für die Uhrzeit */
+}
+
+
+.chat-area {
+  padding: 10px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+  margin: 0 10px; /* Fügt etwas Platz an den Seiten hinzu */
+  padding: 10px 0; /* Fügt oben und unten im Chat-Bereich etwas Platz hinzu */
+}
+
+.message {
+  max-width: 60%;
+  padding: 10px;
+  border-radius: 6px;
+  color: white;
+}
+
+.message {
+  position: relative; /* Ermöglicht absolute Positionierung von untergeordneten Elementen */
+  padding: 10px;
+  padding-right: 50px; /* Stellt sicher, dass Text nicht die Zeitangabe überdeckt */
+  margin-bottom: 10px;
+}
+
+.message-time {
+  position: absolute;
+  bottom: 5px;
+  right: 10px;
+  font-size: 0.75em;
+  color: #707070; /* Unauffällige Schriftfarbe für die Zeit */
+}
+
+.message-day {
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  color: #707070;
+  align-self: center;
+  background-color: #e0e0e0; /* Dunkelblau für empfangene Nachrichten */
+}
+
+.received {
+  color: black;
+  align-self: flex-start;
+  background-color: #e0e0e0; /* Dunkelblau für empfangene Nachrichten */
+}
+
+.sent {
+  color: rgb(33, 33, 33);
+  align-self: flex-end;
+  background-color: #c0c0c0; /* Dunkelgrün für gesendete Nachrichten */
+}
+
+.message-input {
+  display: flex;
+  padding: 10px;
+  background-color: #f0f0f0; /* Hintergrundfarbe des Eingabebereichs */
+}
+
+.message-input input {
+  flex-grow: 1; /* Eingabefeld nimmt verfügbaren Platz ein */
+  padding: 10px;
+  margin-right: 10px; /* Abstand zwischen Eingabefeld und Button */
+  border: 2px solid #c0c0c0; /* Rahmen des Eingabefelds */
+  border-radius: 5px; /* Abgerundete Ecken für das Eingabefeld */
+  font-size: 1em;
+  caret-color: rgb(104, 104, 104);
+}
+
+.message-input input:focus {
+  outline: none; /* Entfernt den blauen Rahmen um das Eingabefeld */
+}
+
+.message-input button {
+  padding: 10px 20px;
+  background-color: #c0c0c0; /* Hintergrundfarbe des Buttons */
+  border: none; /* Kein Rahmen für den Button */
+  border-radius: 5px; /* Abgerundete Ecken für den Button */
+  cursor: pointer; /* Cursor ändert sich zum Zeiger, wenn er über dem Button ist */
+}
+
+.message-input button:hover {
+  background-color: #a0a0a0; /* Dunklere Hintergrundfarbe beim Überfahren mit der Maus */
+}
+
+.icons > span, .icon {
+  cursor: pointer;
+}
