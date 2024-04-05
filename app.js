@@ -3,6 +3,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const socketio = require('socket.io');
 const cookieParser = require('cookie-parser');
+const { request } = require('http');
 // const bcrypt = require('bcryptjs');
 
 // Express-Server erstellen
@@ -148,10 +149,10 @@ app.get('/getrequests', async (req, res) => {
         let requests = '';
         let requestsarray = [];
         requests = await Request.find({receiver: req.cookies.username});
+        console.log('Request!!!!')
         console.log(requests);
         requests.forEach(request => {
-            requestsarray.push(`${request.sender} <button class="accept" data-sender="${request.sender}" href="#">Annehmen</button>
-            <button class="decline" data-sender="${request.sender}" href="#">Ablehnen</button>`);
+            requestsarray.push({sender: request.sender});
         });
         console.log(requestsarray);
         res.json(requestsarray);
@@ -267,8 +268,20 @@ app.get('/decline', async (req, res) => {
     }
 });
 
+app.get('/deleteRequest', async (req, res) => {
+    const user = req.query.user;
+    const me = req.cookies.username;
+    try {
+        await Request.deleteOne({sender: me, receiver: user});
+        res.json('Freundschaftsanfrage gelöscht');
+    } catch (error) {
+        res.status(500).send('Fehler beim Löschen der Anfrage');
+    }
+})
+
 app.get('/search', async (req, res) => {
     const searchTerm = req.query.q;
+    console.log(req.query.qc)
     if (!searchTerm) {
         return res.status(400).send('Suchbegriff ist erforderlich');
     }
@@ -277,21 +290,24 @@ app.get('/search', async (req, res) => {
         let users = '';
         let usersarray = [];
         users = await User.find({
-        username: { $regex: searchTerm, $options: 'i' },
+        username: { $regex: '^' + searchTerm, $options: 'i' },
         });
-        console.log(users);
-        console.log('=====================')
+        let requestsSearch = await Request.find({sender: req.cookies.username});
+        // console.log(users); 
+        // console.log('=====================')
         users.forEach(user => {
-            usersarray.push(`${user.username} <button class="addButton" data-username="${user.username}" href="#"><svg width="15" height="15" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-            <!-- Hintergrund -->
-            <rect width="100%" height="100%" fill="none" />
-          
-            <!-- Plus-Zeichen -->
-            <line x1="10" y1="50" x2="90" y2="50" stroke="white" stroke-width="20" />
-            <line x1="50" y1="10" x2="50" y2="90" stroke="white" stroke-width="20" />
-          </svg></button>`);
+            if(user.username !== req.cookies.username){
+                let request = 0;
+                requestsSearch.forEach(requesti => {
+                    if (requesti.receiver == user.username) {
+                        request = 1;
+                    }
+                })
+                usersarray.push({username: user.username, id: user._id, requestUser: request});
+                // usersarray.push(`${user.username} <button class="addButton" data-username="${user.username}" href="#"></button>`);
+            }
         });
-        console.log(usersarray);
+        // console.log(usersarray);
         res.json(usersarray);
     } catch (error) {
         res.status(500).send('Fehler bei der Suche nach Benutzern');
